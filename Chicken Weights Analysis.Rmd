@@ -2,8 +2,14 @@
 title: "Chicken Weights Analysis"
 author: "*Wejdan Saleh*"
 date: "*03/09/2020*"
-output: html_document
-
+output:
+  html_document:
+    fig_caption: false
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 3
 ---
 
 
