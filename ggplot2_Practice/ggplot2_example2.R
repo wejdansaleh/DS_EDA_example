@@ -11,7 +11,7 @@ msleep2 <- msleep %>%
 
 msleep2
 
-myCol <- brewer.pal(4, "Dark2")
+myCol <- brewer.pal(5, "Dark2")
 
 # a) "Dot" plot
 ggplot(msleep2, aes(x = vore, y = sleep_total, color = vore)) +
@@ -34,32 +34,32 @@ ggplot(msleep2, aes(x = vore, y = sleep_total, color = vore)) +
   NULL
 
 # b) "Dot" plot with mean and sd
-# ggplot(msleep2, aes(x = vore, y = sleep_total, color = vore)) +
-#   geom_point(position = position_jitter(width = 0.2, seed = 136), 
-#              shape = 16, alpha = 0.65,
-#               fun.y="mean") +
-#   stat_summary(fun.data = mean_sdl, 
-#                fun.args = list(mult = 1))+
-#   
-#   scale_color_brewer(palette = "Dark2") +
-#   
-#   scale_y_continuous(limits = c(0,24),
-#                      breaks = seq(0, 24, 6),
-#                      expand = c(0,0)) +
-#   scale_x_discrete(labels = c("Carnivore",
-#                               "Herbivore",
-#                               "Insectivore",
-#                               "Omnivore")) +
-# 
-# 
-#   labs(title = "b) Dot plot with mean and sd",
-#        x = "Eating Habits",
-#        y = "Total Sleep Time (h) [mean,sd]") +
-#   theme_classic() +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-#         legend.position = "none") 
-#   
-#   
+ggplot(msleep2, aes(x = vore, y = sleep_total, color = vore)) +
+  geom_point(position = position_jitter(width = 0.2, seed = 136),
+             shape = 16, alpha = 0.65,
+              fun.y="mean") +
+  stat_summary(fun.data = mean_sdl,
+               fun.args = list(mult = 1))+
+
+  scale_color_brewer(palette = "Dark2") +
+
+  scale_y_continuous(limits = c(0,24),
+                     breaks = seq(0, 24, 6),
+                     expand = c(0,0)) +
+  scale_x_discrete(labels = c("Carnivore",
+                              "Herbivore",
+                              "Insectivore",
+                              "Omnivore")) +
+
+
+  labs(title = "b) Dot plot with mean and sd",
+       x = "Eating Habits",
+       y = "Total Sleep Time (h) [mean,sd]") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none")
+
+
 # c) Just the mean and the sd
 ggplot(msleep2, aes(x = vore, y = sleep_total, color = vore)) +
 
@@ -88,30 +88,30 @@ ggplot(msleep2, aes(x = vore, y = sleep_total, color = vore)) +
 
 
 # d) Bar (aka "Dynamite") plot
-om <- msleep2[msleep2$vore =="omni" ,]
-sd <- sd(om$sleep_total)
-me <- mean(om$sleep_total)
-
-ggplot(msleep2, aes(x = vore, 
-                    y = sleep_total, 
-                    color = vore,
-                    fill= vore)) +
-  geom_bar(stat = "identity") +
-  scale_y_continuous(limits = c(0,24),
-                     breaks = seq(0, 24, 6),
-                     expand = c(0,0)) +
-  scale_x_discrete(labels = c("Carnivore",
-                              "Herbivore",
-                              "Insectivore",
-                              "Omnivore")) +
-  
-  labs(title = "d) Bar (aka Dynamite) plot",
-       x = "Eating Habits",
-       y = "Total Sleep Time (h) [mean, sd]") +
-  theme_classic() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none") +
-  NULL
+# om <- msleep2[msleep2$vore =="omni" ,]
+# sd <- sd(om$sleep_total)
+# me <- mean(om$sleep_total)
+# 
+# ggplot(msleep2, aes(x = vore, 
+#                     y = sleep_total, 
+#                     color = vore,
+#                     fill= vore)) +
+#   geom_bar(stat = "identity") +
+#   scale_y_continuous(limits = c(0,24),
+#                      breaks = seq(0, 24, 6),
+#                      expand = c(0,0)) +
+#   scale_x_discrete(labels = c("Carnivore",
+#                               "Herbivore",
+#                               "Insectivore",
+#                               "Omnivore")) +
+#   
+#   labs(title = "d) Bar (aka Dynamite) plot",
+#        x = "Eating Habits",
+#        y = "Total Sleep Time (h) [mean, sd]") +
+#   theme_classic() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1),
+#         legend.position = "none") +
+#   NULL
 
 # e) Box plot
 ggplot(msleep2, aes(x = vore, y = sleep_total )) +
