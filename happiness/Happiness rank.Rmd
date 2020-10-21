@@ -32,11 +32,26 @@ library(knitr)
 happiness <- read_csv ("data/2019.csv")
 ```
 
+Can we read in all 5 years and combine them into 1 data frame?
+This would allow us to analyze trends over time (i.e. the 5 years)
+This raises more research questions.
+
+```{r}
+happiness2019 <- read_csv ("data/2019.csv")
+happiness2018 <- read_csv ("data/2018.csv")
+happiness2017 <- read_csv ("data/2017.csv")
+happiness2016 <- read_csv ("data/2016.csv")
+happiness2015 <- read_csv ("data/2015.csv")
+
+
+```
+
+
 
 ## Correlation Matrix
 
 ```{r echo=FALSE,  include=FALSE}
-happiness_cm <-happiness[,c(4:9)]
+happiness_cm <- happiness[,c(4:9)]
 happiness.cor = cor(happiness_cm)
 #compute Spearman  coefficients
 
@@ -45,12 +60,20 @@ happiness.cor = cor(happiness_cm, method = c("spearman"))
 happiness.rcorr = rcorr(as.matrix(happiness_cm))
 happiness.rcorr
 
-happiness.coeff = happiness.rcorr$r
-happiness.p = happiness.rcorr$P
+happiness.coeff <- happiness.rcorr$r
+happiness.p <- happiness.rcorr$P
 
 
 
 ```
+
+What did you learn from all this correlation analysis?
+
+Can you plot each variable against each other to see the trends?
+
+can you plot each with a time component to dissect the influence there?
+
+Can you build a model that describes the relationship between happiness and each variable independently? or all together?
 
 ```{r echo=FALSE}
 #Visualizing the correlation matrix
@@ -62,33 +85,63 @@ corrplot(happiness.cor)
 ## Pie chart:
 
 ```{r echo=FALSE}
-mu_1 <- mean(happiness$`GDP per capita`)
-mu_2 <-mean(happiness$`Social support`)
-mu_3 <- mean(happiness$`Healthy life expectancy`)
-mu_4 <- mean(happiness$`Freedom to make life choices`)
-mu_5 <- mean(happiness$`Generosity`)
+
+# mu_1 <- mean(happiness$`GDP per capita`)
+# mu_2 <-mean(happiness$`Social support`)
+# mu_3 <- mean(happiness$`Healthy life expectancy`)
+# mu_4 <- mean(happiness$`Freedom to make life choices`)
+# mu_5 <- mean(happiness$`Generosity`)
+
+# sd_1   <- sd(happiness$`GDP per capita`)
+# sd_2 <- sd(happiness$`Social support`)
+
+happiness_t <- happiness[,-1] %>% 
+  pivot_longer(-c(`Country or region`)) %>% 
+  group_by(name) %>% 
+  mutate(Z_score = scale(value))
+
+happiness[,-1] %>% 
+  pivot_longer(-c(`Country or region`)) %>% 
+  group_by(name) %>% 
+  summarise(mean = mean(value),
+            stdev = sd(value))
+  
 
 
-sd_1   <- sd(happiness$`GDP per capita`)
-sd_2 <- sd(happiness$`Social support`)
-
-x <-  c(mu_1, mu_2, mu_3,mu_4 , mu_5)
-
-labels <-  c("GDP per capita","Social support","Healthy life expectancy","Freedom to make life choices","Generosity")
-
-piepercent<- round(x, 1)
+# x <-  c(mu_1, mu_2, mu_3,mu_4 , mu_5)
+# 
+# labels <-  c("GDP per capita","Social support","Healthy life expectancy","Freedom to make life choices","Generosity")
+# 
+# piepercent<- round(x, 1)
 
 # Plot the chart.
-pie(x, labels = piepercent, main = "Precentage Pie chart",col = rainbow(length(x)))
-legend("topright", c("GDP per capita","Social support","Healthy life e…","Freedom to make life choices","Generosity"), cex = 0.5,
-       fill = rainbow(length(x)))
+# pie(x, labels = piepercent, main = "Precentage Pie chart",col = rainbow(length(x)))
+# legend("topright", c("GDP per capita","Social support","Healthy life e…","Freedom to make life choices","Generosity"), cex = 0.5,
+#        fill = rainbow(length(x)))
+
+
+
 
 ```
 
-## The Standard Normal Distribution:
+## plot distributions
 
+```{r}
+ggplot(happiness_t, aes(Z_score)) +
+  geom_density() +
+  facet_grid(name ~ ., scales = "free_y")
+```
+
+```{r}
+ggplot(happiness_t, aes(name, Z_score)) +
+  # geom_jitter(width = 0.3, alpha = 0.4) +
+  geom_violin()
+```
 
 ```{r echo=FALSE}
+
+
+
 ggplot(happiness) + 
   geom_function(aes(color = "GDP per capita"), fun = dnorm, args = list(mean = mu_1, sd = sd_1)) +
   geom_function(aes(color = "Social support"), fun = dnorm, args = list(mean = mu_2, sd = sd_2)) +
