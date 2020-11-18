@@ -3,8 +3,10 @@ This eepository contain three files for tasks.
 
 ## 1. Python file includes:
 - Chicken Weights
-- Diamonds.
--Bonus: Meditation Dataset.
+- Diamonds
+- Bonus: Meditation Dataset
+- Parsing_data.py
+- mtcars.py
 
 ## 2.R file includes:
 - Chicken Weights.
