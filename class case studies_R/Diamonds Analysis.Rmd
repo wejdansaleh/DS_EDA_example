@@ -1,0 +1,133 @@
+---
+title: "Diamonds Analysis"
+output:
+  html_document:
+    fig_caption: false
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 3
+---
+
+
+```{r setup, include=FALSE, echo=FALSE}
+library(tidyverse)
+library(rio)
+library(Hmisc)
+library(knitr)
+library(DT)
+library(dplyr)
+
+#library(shiny)
+
+```
+
+## Exercise 8.1 (Import and Examine)
+```{r output="asis", echo=FALSE}
+jems <- read_csv("data/diamonds.csv")
+jems %>%
+       kable()
+
+```
+
+## Exercise 8.2 (Counting individual groups)
+#### How many diamonds with a clarity of category “IF” are present in the data-set? 
+
+```{r , echo=FALSE}
+clarity <- jems %>%
+  filter(clarity =="IF")
+nrow(clarity)
+
+```
+####  What fraction of the total do they represent?
+
+```{r, echo=FALSE}
+fraction <-nrow(clarity)/nrow(jems)
+fraction
+```
+
+## Exercise 8.3 (Summarizing proportions)
+####  What proportion of the whole is made up of each category of clarity?
+```{r output="asis", echo=FALSE}
+jems %>%
+  group_by(clarity) %>%
+  count() %>%
+  mutate(prop=n/nrow(jems))%>%
+       datatable()
+```
+
+
+## Exercise 8.4 (Find specific diamonds prices)
+####  What is the cheapest diamond price overall?
+```{r, echo=FALSE}
+min(jems$price)
+```
+
+####  What is the range of diamond prices?
+```{r, echo=FALSE}
+range(jems$price)
+```
+
+####  What is the average diamond price in each category of cut and color?
+```{r output="asis", echo=FALSE}
+jems %>% 
+  group_by(cut, color) %>%
+  summarise(avg = mean(price)) %>%
+         datatable()
+```
+
+## Exercise 8.5 (Basic plotting)
+```{r,  echo=FALSE}
+jems %>%
+  group_by(carat) 
+ggplot(jems, aes(carat,price )) +
+  geom_jitter()
+```
+
+## Exercise 8.6 (Applying transformations)
+```{r }
+jems <- jems %>%
+  mutate(price_log10 = log10(jems$price),
+         carat_log10<-log10(jems$carat))
+# alternative 
+jems$price_log10 <- log10(jems$price)
+jems$carat_log10 <-log10(jems$carat)
+```
+
+####  Plot the transformed varibles
+```{r,  echo=FALSE}
+ggplot(jems, aes(x = carat_log10,y = price_log10 )) +
+  geom_point()+
+  geom_smooth(method = lm, se = FALSE ,colour = "red")
+```
+
+## Exercise 8.7 (Basic plotting)
+```{r, echo=FALSE}
+jems %>%
+  group_by(carat)
+ggplot(jems, aes(carat_log10,price_log10 )) +
+  geom_jitter()
+```
+
+## Exercise 8.8 (Viewing models)
+```{r,  echo=FALSE}
+# our produce model x ~ y
+diamonds_lm <- lm( price_log10 ~ carat_log10, data = jems)
+diamonds_lm
+diamonds_lm$coefficients %>%
+     kable()
+  
+```
+
+## Exercise 8.9 (Displaying models)
+```{r output="asis" ,echo=FALSE}
+ggplot(jems, aes( x = carat_log10, y = price_log10)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE ,colour = "red")
+```
+
+
+
+
+
